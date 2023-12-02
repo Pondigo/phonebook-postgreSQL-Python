@@ -1,0 +1,6 @@
+{
+    "sourceMap": true,
+    "main": "src/style.less",
+    "outDir": "static"
+  }
+  

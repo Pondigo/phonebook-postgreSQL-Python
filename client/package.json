@@ -1,0 +1,30 @@
+{
+  "name": "phonebook-client",
+  "version": "1.0.0",
+  "description": "Phonebook from the Lenor's portfolio builded with Typescript and LESS. With Python FAST API and PostgreSQL as database in the backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pondigo/phonebook-postgreSQL-Python.git"
+  },
+  "keywords": [
+    "Typescript",
+    "LESS",
+    "Python",
+    "FAST",
+    "API",
+    "PostgresSQL"
+  ],
+  "author": "Lenora Pondigo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pondigo/phonebook-postgreSQL-Python/issues"
+  },
+  "homepage": "https://github.com/Pondigo/phonebook-postgreSQL-Python#readme",
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}
