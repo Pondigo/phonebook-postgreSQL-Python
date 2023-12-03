@@ -1,9 +1,24 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from config.db import Database
 from models.contact import Contact
 
 app = FastAPI()
 DATABASE = Database()
+
+# Add cors config
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Fetch the results
 DATABASE.execute("""CREATE TABLE IF NOT EXISTS public.contacts(
@@ -14,10 +29,6 @@ DATABASE.execute("""CREATE TABLE IF NOT EXISTS public.contacts(
     fav boolean DEFAULT false,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT users_email_key UNIQUE (email))""")
-
-@app.get("/")
-async def root():
-    return {"message": "Hello"}
 
 # Create
 @app.post("/contact")
@@ -84,3 +95,6 @@ async def delete_contact(contact_id: str):
     """
     return DATABASE.execute("DELETE FROM contacts WHERE id={}"
                             .format(contact_id))
+
+
+app.mount("/", StaticFiles(directory="client/static",html = True), name="static")
