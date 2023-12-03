@@ -4,7 +4,9 @@
   "description": "Phonebook from the Lenor's portfolio builded with Typescript and LESS. With Python FAST API and PostgreSQL as database in the backend.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-less": "lessc src/style.less static/style.css",
+    "build": "npm run build-less && tsc"
   },
   "repository": {
     "type": "git",
