@@ -10,6 +10,7 @@ Example:
     settings = Settings()
     db_params = settings.connection_params
 """
+import os
 
 class Settings:
     """
@@ -28,9 +29,9 @@ class Settings:
     db_params = settings.connection_params
     """
     connection_params = {
-        "dbname":"postgres",
-        "user":"postgres",
-        "password":"postgres",
-        "host":"localhost",
-        "port":"5432"
+        "dbname":   os.getenv("dbname"),
+        "user":     os.getenv("user"),
+        "password": os.getenv("password"),
+        "host":     os.getenv("host"),
+        "port":     os.getenv("port")
     }
