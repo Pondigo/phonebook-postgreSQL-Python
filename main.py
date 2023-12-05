@@ -96,5 +96,4 @@ async def delete_contact(contact_id: str):
     return DATABASE.execute("DELETE FROM contacts WHERE id={}"
                             .format(contact_id))
 
-
-app.mount("/", StaticFiles(directory="client/static",html = True), name="static")
+app.mount("/", StaticFiles(directory="client/static", html=True), name="static")
