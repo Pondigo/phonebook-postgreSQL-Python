@@ -1,9 +1,12 @@
 import modalForm from "../modalForm/index.js";
+import * as api from "../api/index.js"
+import { formatPhone } from "../util/formatPhone.js";
 
 export default class contactsTable {
   table: HTMLTableElement;
   active: boolean;
   modal: modalForm;
+  
 
   constructor() {
     this.active = false;
@@ -84,19 +87,40 @@ export default class contactsTable {
     var phone: HTMLTableCellElement = newRow.insertCell(2);
     var email: HTMLTableCellElement = newRow.insertCell(3);
     var edit: HTMLTableCellElement = newRow.insertCell(4);
-    var deleteButton: HTMLTableCellElement = newRow.insertCell(5);
+    var deleteCell: HTMLTableCellElement = newRow.insertCell(5);
 
     // Set class name
     edit.className = "edit-cell";
-    deleteButton.className = "delete-cell";
+    deleteCell.className = "delete-cell";
 
-    // Set the content of the cells
-    fav.innerHTML = `<label class="star-button">
+    // Fav button
+    var favLabel: HTMLLabelElement = document.createElement("label");
+    favLabel.className = "star-button";
+    var favInput: HTMLInputElement = document.createElement("input");
+    favInput.type = "checkbox";
+    favInput.id = "fav-" + contactToAdd[0];
+    favInput.defaultChecked = contactToAdd[4];
+
+    function handleCheckChange(this: HTMLInputElement, ev: Event) {
+      ev.preventDefault();
+      console.log("change", this.checked, "id:", contactToAdd[0]);
+      api.setFav(contactToAdd[0], this.checked)
+    }
+
+    favLabel.appendChild(favInput);
+    favLabel.innerHTML = favLabel.innerHTML + ` <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>`;
+
+    fav.appendChild(favLabel);
+
+    document.getElementById("fav-" + contactToAdd[0])?.addEventListener("change", handleCheckChange)
+    //console.log()
+/*     fav.innerHTML = `<label class="star-button">
   <input type="checkbox">
   <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
-</label>`;
+</label>`; */
+
     name.innerHTML = contactToAdd[1];
-    phone.innerHTML = contactToAdd[2];
+    phone.innerHTML = formatPhone(contactToAdd[2]);
     email.innerHTML = contactToAdd[3];
 
     // Edit button
@@ -118,7 +142,22 @@ export default class contactsTable {
     editButton.addEventListener("click", handleEdit);
     edit.appendChild(editButton);
 
-    deleteButton.innerHTML = `<button class="delete-button"><svg class="edit-svgIcon" viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg></button>`;
+    // Delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete-button";
+    deleteButton.innerHTML = `<svg class="edit-svgIcon" viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>`;
+
+    function handleDelete(this: HTMLButtonElement, ev: MouseEvent) {
+      ev.preventDefault();
+      console.log("Delete:", contactToAdd);
+      api.deleteContact(contactToAdd[0]).then(()=>{
+        console.log("Deleted!");
+        newRow.remove();
+      })
+    }
+
+    deleteButton.addEventListener("click", handleDelete);
+    deleteCell.appendChild(deleteButton);
   }
 
   public renderContacts(contacts: contact[]) {
