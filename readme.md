@@ -23,6 +23,12 @@ A simple phonebook application with a FastAPI backend serving an API and a stati
 - Node.js (for TypeScript compilation)
 - NPM
 
+## Working on
+
+- Create form
+- Edit phone
+- Local host support
+
 ## Getting Started
 
 1. **Clone the repository:**
