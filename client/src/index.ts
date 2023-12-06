@@ -1,5 +1,6 @@
 import contactsTable from "./table/index.js";
 import modalForm from "./modalForm/index.js";
+import * as api from "./api/index.js"
 
 const table = new contactsTable();
 const modal = new modalForm();
@@ -20,17 +21,16 @@ function addCreateButton(): void {
 
 async function getContacts(): Promise<void> {
   try {
-    const response: Response = await fetch("/contacts", {
-      method: "GET",
-      headers: {},
-    });
+      const result: contact[] = await api.getContacts();
 
-    if (response.ok) {
-      const result: contact[] = await response.json();
+      const titleHeader = document.getElementById("titleHeader");
+      if(titleHeader) {
+        titleHeader.className = "title";
+        console.log("Change clase")
+      }
+      
       table.renderContacts(result);
       addCreateButton();
-
-    }
   } catch (err) {
     console.error(err);
   }
