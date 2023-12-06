@@ -42,8 +42,8 @@ async def create_contact(new_contact: Contact):
     Raises:
         HTTPException: If there is an error while querying the database. 
     """
-    return DATABASE.execute("INSERT INTO contacts (name,phone,email) VALUES ('{}','{}','{}')"
-                            .format(new_contact.name,new_contact.phone,new_contact.email))
+    contact_id = DATABASE.query(f"INSERT INTO contacts (name,phone,email) VALUES ('{new_contact.name}','{new_contact.phone}','{new_contact.email}') RETURNING id")
+    return contact_id[0][0]
 
 # Read
 @app.get("/contacts")
@@ -77,6 +77,12 @@ async def update_contact(contact_updated: Contact, contact_id: str):
     """
     return DATABASE.execute("UPDATE contacts SET name='{}' WHERE id={}"
                             .format(contact_updated.name, contact_id))
+
+@app.put("/contact/fav/{contact_id}/{state}")
+async def set_fav_contact(contact_id: str, state: str):
+    return DATABASE.execute("UPDATE contacts SET fav={} WHERE id={}"
+                            .format(state, contact_id))
+
 
 # Delete
 @app.delete("/contact/{contact_id}")
